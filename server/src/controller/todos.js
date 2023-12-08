@@ -1,13 +1,10 @@
-const express = require('express');
 const db = require('../../db.json');
 
-const TodosRoute = express.Router();
-
-TodosRoute.get('/all', (req, res) => {
+exports.getAllTodos = (req, res) => {
   res.status(200).send(db);
-});
+};
 
-TodosRoute.get('/:id', (req, res) => {
+exports.getTodoById = (req, res) => {
   const { id } = req.params;
   const todo = db.find((todo) => todo.id === id);
 
@@ -16,9 +13,9 @@ TodosRoute.get('/:id', (req, res) => {
   }
 
   res.status(200).send(todo);
-});
+};
 
-TodosRoute.post('/', (req, res) => {
+exports.updateTodo = (req, res) => {
   const { body } = req;
 
   if (!body.title) {
@@ -34,9 +31,9 @@ TodosRoute.post('/', (req, res) => {
   db.push(newTodo);
   console.log(db);
   res.status(201).send(newTodo);
-});
+};
 
-TodosRoute.put('/', (req, res) => {
+exports.createTodo = (req, res) => {
   const { id, title, completed } = req.body;
   const todo = db.find((todo) => todo.id === id);
 
@@ -48,9 +45,9 @@ TodosRoute.put('/', (req, res) => {
   todo.completed = completed || false;
 
   res.status(200).send(todo);
-});
+};
 
-TodosRoute.delete('/:id', (req, res) => {
+exports.deleteTodo = (req, res) => {
   const { id } = req.params;
   const todo = db.find((todo) => todo.id === id);
 
@@ -62,6 +59,4 @@ TodosRoute.delete('/:id', (req, res) => {
   db.splice(index, 1);
 
   res.status(200).send(todo);
-});
-
-module.exports = TodosRoute;
+};

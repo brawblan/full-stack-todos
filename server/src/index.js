@@ -4,8 +4,8 @@ const dotenv = require('dotenv');
 const fs = require('fs');
 const cors = require('cors');
 
-const BasicRoute = require('./controllers/basic');
-const TodosRoute = require('./controllers');
+const BasicRoute = require('./controller/basic');
+const TodosRoute = require('./routes/todos');
 
 dotenv.config();
 

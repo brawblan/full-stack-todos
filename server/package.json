@@ -1,0 +1,22 @@
+{
+  "name": "todo-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "server": "node src/index.js",
+    "dev": "nodemon server",
+    "docs": "docgen build -i Todos.postman_collection.json -o public/index.html"
+  },
+  "author": "Brandon Blankenstein",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "node-json-db": "^2.3.0",
+    "nodemon": "^3.0.2"
+  }
+}

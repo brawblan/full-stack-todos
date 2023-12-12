@@ -13,7 +13,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "docs": "docgen build -i Todos.postman_collection.json -o public/index.html",
     "render-build": "npm install && npm run build",
-    "render-start": "ts-node --esm dist/index"
+    "render-start": "node --esm dist/index"
   },
   "author": "Brandon Blankenstein",
   "license": "MIT",

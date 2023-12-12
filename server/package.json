@@ -6,12 +6,13 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon dist/index.js",
-    "build": "rm -rf dist && tsc && rollup -c rollup.config.js",
+    "dev-build": "rm -rf dist && build",
+    "build": "tsc && rollup -c rollup.config.js",
     "tsc": "tsc -p tsconfig.json",
     "start": "ts-node --esm src/index",
     "test": "echo \"Error: no test specified\" && exit 1",
     "docs": "docgen build -i Todos.postman_collection.json -o public/index.html",
-    "render-build": "npm install && tsc && rollup -c rollup.config.js"
+    "render-build": "npm install && npm run build"
   },
   "author": "Brandon Blankenstein",
   "license": "MIT",

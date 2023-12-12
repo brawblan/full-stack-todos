@@ -10,7 +10,8 @@
     "tsc": "tsc -p tsconfig.json",
     "start": "ts-node --esm src/index",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "docs": "docgen build -i Todos.postman_collection.json -o public/index.html"
+    "docs": "docgen build -i Todos.postman_collection.json -o public/index.html",
+    "render-build": "npm install && npm run build"
   },
   "author": "Brandon Blankenstein",
   "license": "MIT",

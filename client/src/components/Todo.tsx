@@ -4,8 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { DeleteOutlined } from '@ant-design/icons';
-
-const BASE_URL = import.meta.env.API_URL || 'http://localhost:1200';
+import { DELETE, PUT } from '../utilities/fetch';
 
 interface Todo {
   id: number | string;
@@ -31,15 +30,7 @@ const Todo = ({ id, title, completed }: Todo) => {
   // #endregion Modal
 
   const todoUpdateMutation = useMutation({
-    mutationFn: (todo: Todo) => {
-      return fetch(`${BASE_URL}/todos`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(todo),
-      }).then((res) => res.json());
-    },
+    mutationFn: (todo: Todo) => PUT('/todos', todo),
     onSuccess: () => {
       toast("Successfully updated Todo!", {
         type: 'success',
@@ -53,14 +44,7 @@ const Todo = ({ id, title, completed }: Todo) => {
   });
 
   const todoDeleteMutation = useMutation({
-    mutationFn: async (id: string | number) => {
-      return await fetch(`${BASE_URL}/todos/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then((res) => res.json());
-    },
+    mutationFn: async (id: string | number) => DELETE(`/todos/${id}`),
     onSuccess: () => {
       toast("Successfully deleted Todo!", {
         type: 'success',

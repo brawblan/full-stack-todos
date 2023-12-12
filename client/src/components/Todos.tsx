@@ -17,7 +17,7 @@ const Todos = ({ todosQuery }: { todosQuery: UseQueryResult<any, Error>; }) => {
       }}
       // @ts-ignore
       renderItem={({ id, title, completed }) => (
-        <List.Item key={id}>
+        <List.Item key={`${id}-${title}`}>
           <Todo id={id} title={title} completed={completed} />
         </List.Item>
       )}

@@ -4,8 +4,7 @@ import TodoForm from './Form';
 import Todos from './Todos';
 import { ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
-
-const BASE_URL = import.meta.env.API_URL || 'http://localhost:1200';
+import { GET } from '../utilities/fetch';
 
 const { Header, Content, Footer } = Layout;
 
@@ -31,9 +30,7 @@ const TodoApp: React.FC = () => {
 
   const todosQuery = useQuery({
     queryKey: ['todos'],
-    queryFn: () => {
-      return fetch(`${BASE_URL}/todos/all`).then((res) => res.json());
-    }
+    queryFn: () => GET('/todos/all'),
   });
 
   return (

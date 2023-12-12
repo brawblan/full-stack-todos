@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { supabase } from '../index';
+import { supabase } from '../services/supabase';
 
 export const getAllTodos = async (_: Request, res: Response) => {
   const { data, error } = await supabase

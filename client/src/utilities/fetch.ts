@@ -1,5 +1,5 @@
-const BASE_URL = import.meta.env.API_URL;
-if (import.meta.env.NODE_ENV === 'development') {
+const BASE_URL = import.meta.env.VITE_API_URL;
+if (import.meta.env.DEV) {
   import.meta.env.API_URL = 'http://localhost:1200';
 }
 

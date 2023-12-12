@@ -1,4 +1,7 @@
-const BASE_URL = import.meta.env.API_URL || import.meta.env.DEV_API_URL || 'http://localhost:1200';
+const BASE_URL = import.meta.env.API_URL;
+if (import.meta.env.NODE_ENV === 'development') {
+  import.meta.env.API_URL = 'http://localhost:1200';
+}
 
 interface SuccessResponse<T = any> {
   success: true;

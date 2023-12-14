@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { POST } from '../utilities/fetch';
 
-const TodoForm: React.FC = () => {
+const CreateTodo: React.FC = () => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
 
@@ -43,4 +43,4 @@ const TodoForm: React.FC = () => {
   );
 };
 
-export default TodoForm;
+export default CreateTodo;

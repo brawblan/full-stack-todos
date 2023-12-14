@@ -1,48 +1,52 @@
-import React from 'react';
 import { Button, Layout, Menu, theme } from 'antd';
-import TodoForm from './Form';
-import Todos from './Todos';
 import { ToastContainer } from 'react-toastify';
-import { useQuery } from '@tanstack/react-query';
-import { GET } from '../utilities/fetch';
+import { Link, Outlet } from '@tanstack/react-router';
 
 const { Header, Content, Footer } = Layout;
 
 const MenuItems = [
   {
-    label: 'Todos',
+    label: (
+      <Link to="/todos">
+        Todos
+      </Link>
+    ),
     key: 'Todos',
+
   },
   {
-    label: 'Profile',
-    key: 'Profile',
-  },
-  {
-    label: 'App',
+    label: (
+      <Link to="/app-info">
+        App Info
+      </Link>
+    ),
     key: 'App',
+  },
+  {
+    label: (
+      <Link to="/profile">
+        Profile
+      </Link>
+    ),
+    key: 'Profile',
   },
 ];
 
-const TodoApp: React.FC = () => {
+export default function AppLayout() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const todosQuery = useQuery({
-    queryKey: ['todos'],
-    queryFn: () => GET('/todos/all'),
-  });
-
   return (
     <Layout className="layout">
       <ToastContainer />
-      <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', position: 'fixed', left: 0, right: 0 }}>
+      <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', width: '100%' }}>
         <h1 style={{ color: 'white', textWrap: 'nowrap' }}>Full Stack Todo App</h1>
         <Menu
           theme="dark"
           mode="horizontal"
           overflowedIndicator={<Button type="primary">Menu</Button>}
-          defaultSelectedKeys={['1']}
+          defaultSelectedKeys={['Todos']}
           items={MenuItems.map(({ key, label }) => {
             return {
               key,
@@ -51,13 +55,9 @@ const TodoApp: React.FC = () => {
           })}
         />
       </Header>
-      <Content style={{ padding: '5rem 2rem', backgroundColor: colorBgContainer }}>
+      <Content style={{ padding: '2rem 2rem', backgroundColor: colorBgContainer }}>
         <div className="site-layout-content">
-          <TodoForm />
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
-            <h2>Todos</h2>
-          </div>
-          <Todos todosQuery={todosQuery} />
+          <Outlet />
         </div>
       </Content>
       <Footer style={{ position: 'fixed', bottom: 0, left: 0, right: 0, textAlign: 'center' }}>
@@ -65,6 +65,4 @@ const TodoApp: React.FC = () => {
       </Footer>
     </Layout>
   );
-};
-
-export default TodoApp;
+}

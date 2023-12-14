@@ -1,7 +1,5 @@
-const BASE_URL = import.meta.env.VITE_API_URL;
-if (import.meta.env.DEV) {
-  import.meta.env.API_URL = 'http://localhost:1200';
-}
+const BASE_URL = import.meta.env.MODE !== 'development' ? import.meta.env.VITE_API_URL : 'http://localhost:1200';
+
 
 interface SuccessResponse<T = any> {
   success: true;

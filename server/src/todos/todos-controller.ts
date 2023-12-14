@@ -9,12 +9,16 @@ export const getAllTodos = async (_: Request, res: Response) => {
   if (data) {
     res.status(200).send(data);
   } else {
-    res.status(+error.code).send(error.message);
+    res.status(400).send(error);
   }
 };
 
 export const getTodoById = async (req: Request, res: Response) => {
   const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).send({ error: { message: 'id is required' } });
+  };
 
   const { data, error } = await supabase
     .from('todos')
@@ -22,7 +26,7 @@ export const getTodoById = async (req: Request, res: Response) => {
     .eq('id', id);
 
   if (error) {
-    res.status(404).send('Todo not found');
+    res.status(404).send({ error: { message: 'Todo not found' } });
     return;
   }
 
@@ -33,7 +37,7 @@ export const updateTodo = async (req: Request, res: Response) => {
   const { id, title, completed } = req.body;
 
   if (!id) {
-    return res.status(400).send('id is required');
+    return res.status(400).send({ error: { message: 'id is required' } });
   }
 
   const { error } = await supabase
@@ -45,11 +49,11 @@ export const updateTodo = async (req: Request, res: Response) => {
     .eq('id', id);
 
   if (error) {
-    res.status(404).send('Todo not found');
+    res.status(404).send({ error: { message: 'Todo not found' } });
     return;
   }
 
-  res.status(201).send({ success: true });
+  res.status(200).send({ success: true });
 };
 
 export const createTodo = async (req: Request, res: Response) => {
@@ -60,7 +64,7 @@ export const createTodo = async (req: Request, res: Response) => {
     .insert({ title });
 
   if (error) {
-    res.status(400).send(error.message);
+    res.status(400).send(error);
     return;
   }
 
@@ -70,13 +74,17 @@ export const createTodo = async (req: Request, res: Response) => {
 export const deleteTodo = async (req: Request, res: Response) => {
   const { id } = req.params;
 
+  if (!id) {
+    return res.status(400).send({ error: { message: 'id is required' } });
+  }
+
   const { error } = await supabase
     .from('todos')
     .delete()
     .eq('id', id);
 
   if (error) {
-    res.status(404).send('Todo not found');
+    res.status(404).send({ error: { message: 'Todo not found' } });
     return;
   }
 

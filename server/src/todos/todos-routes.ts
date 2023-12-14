@@ -4,7 +4,7 @@ import {
   updateTodo,
   createTodo,
   deleteTodo,
-} from '../controller/todos';
+} from './todos-controller';
 import express from 'express'
   ;
 const TodosRoute = express.Router();

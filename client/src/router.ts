@@ -9,10 +9,16 @@ import './index.css';
 import TodosView from './views/todos.tsx';
 import AppInfoView from './views/app-info.tsx';
 import ProfileView from './views/profile.tsx';
-import { Auth, useAuthStore } from './store/auth.ts';
-import { UseBoundStore, StoreApi } from 'zustand';
 import SigninView from './views/signin.tsx';
 import SignupView from './views/signup.tsx';
+import { Auth, useAuthStore } from './store/auth.ts';
+import { UseBoundStore, StoreApi } from 'zustand';
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 export const rootRoute = rootRouteWithContext<{
   useAuthStore: UseBoundStore<StoreApi<Auth>>;
@@ -20,9 +26,22 @@ export const rootRoute = rootRouteWithContext<{
   component: App,
 });
 
+//#region Authentication routes
 export const authenticationRoute = new Route({
   getParentRoute: () => rootRoute,
   path: '/',
+  beforeLoad: ({ navigate }) => {
+    if (useAuthStore.getState().status === 'loggedIn') {
+      throw redirect({
+        to: todosRoute.to,
+      });
+    } else {
+      navigate({
+        replace: true,
+        to: signinRoute.to,
+      });
+    }
+  }
 });
 
 export const signinRoute = new Route({
@@ -35,6 +54,25 @@ export const signupRoute = new Route({
   getParentRoute: () => authenticationRoute,
   path: '/signup',
   component: SignupView,
+});
+//#endregion
+
+//#region Protected routes
+export const protectedRoute = new Route({
+  getParentRoute: () => rootRoute,
+  id: 'protected',
+  beforeLoad: async ({ context }) => {
+    if (context.useAuthStore.getState().status === 'loggedOut') {
+      throw redirect({
+        replace: true,
+        to: signinRoute.to,
+      });
+    }
+
+    return {
+      context,
+    };
+  },
 });
 
 export const todosRoute = new Route({
@@ -54,34 +92,18 @@ export const appInfoRoute = new Route({
   path: '/app-info',
   component: AppInfoView,
 });
-
-export const protectedRoute = new Route({
-  getParentRoute: () => rootRoute,
-  id: 'protected',
-  beforeLoad: async ({ context }) => {
-    console.log(context.useAuthStore.getState());
-
-    if (context.useAuthStore.getState().status === 'loggedOut') {
-      throw redirect({
-        to: signinRoute.to,
-      });
-    }
-
-    return {
-      username: useAuthStore.getState().username,
-    };
-  },
-});
+//#endregion
 
 export const routeTree = rootRoute.addChildren([
-  protectedRoute,
   authenticationRoute.addChildren([
     signinRoute,
     signupRoute,
   ]),
-  todosRoute,
-  profileRoute,
-  appInfoRoute,
+  protectedRoute.addChildren([
+    todosRoute,
+    profileRoute,
+    appInfoRoute,
+  ]),
 ]);
 
 export const router = new Router({
@@ -90,9 +112,3 @@ export const router = new Router({
     useAuthStore,
   },
 });
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
-}

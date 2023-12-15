@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { useAuthStore } from '../store/auth';
 import { useRouter } from '@tanstack/react-router';
@@ -9,13 +8,11 @@ type FieldType = {
   remember?: string;
 };
 
-const SigninView: React.FC = () => {
+function SigninView() {
   const [login] = useAuthStore((state) => [state.login]);
   const router = useRouter();
 
   const onFinish = (values: any) => {
-    console.log(values);
-
     login(values.username);
     router.navigate({
       to: '/todos',

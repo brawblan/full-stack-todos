@@ -1,12 +1,16 @@
 import { Button, Checkbox, Form, Input } from 'antd';
 import { useAuthStore } from '../store/auth';
-import { useRouter } from '@tanstack/react-router';
+import { FileRoute, useRouter } from '@tanstack/react-router';
 
 type FieldType = {
   username?: string;
   password?: string;
   remember?: string;
 };
+
+export const Route = new FileRoute('/signin').createRoute({
+  component: SigninView,
+});
 
 function SigninView() {
   const [login] = useAuthStore((state) => [state.login]);

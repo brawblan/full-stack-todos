@@ -30,21 +30,21 @@ const Todo = ({ id, title, completed }: Todo) => {
   // #endregion Modal
 
   const todoUpdateMutation = useMutation({
-    mutationFn: (todo: Todo) => PUT('/todos', todo),
+    mutationFn: async (todo: Todo) => await PUT('/todos', todo),
     onSuccess: () => {
       toast("Successfully updated Todo!", {
         type: 'success',
         theme: 'dark',
       });
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast("There was an error updating the Todo.");
       console.log('error', error);
     },
   });
 
   const todoDeleteMutation = useMutation({
-    mutationFn: async (id: string | number) => DELETE(`/todos/${id}`),
+    mutationFn: async (id: string | number) => await DELETE(`/todos/${id}`),
     onSuccess: () => {
       toast("Successfully deleted Todo!", {
         type: 'success',
@@ -52,7 +52,7 @@ const Todo = ({ id, title, completed }: Todo) => {
       });
       queryClient.invalidateQueries({ queryKey: ['todos'] });
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast("There was an error deleting the Todo.");
       console.log('error', error);
     },

@@ -1,13 +1,18 @@
 import CreateTodo from '../components/CreateTodo';
 import Todos from '../components/Todos';
 import { useQuery } from '@tanstack/react-query';
-import { GET } from '../utilities/fetch';
+import { todosQueryOptions } from '../queries/todos';
+import { FileRoute } from '@tanstack/react-router';
+
+export const Route = new FileRoute('/todos').createRoute({
+  component: TodosView,
+  loader: async ({ context: { queryClient } }) => (
+    await queryClient.ensureQueryData(todosQueryOptions)
+  ),
+});
 
 function TodosView() {
-  const todosQuery = useQuery({
-    queryKey: ['todos'],
-    queryFn: () => GET('/todos/all'),
-  });
+  const todosQuery = useQuery(todosQueryOptions);
 
   return (
     <>

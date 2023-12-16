@@ -1,3 +1,4 @@
+import { FileRoute } from '@tanstack/react-router';
 import { Button, Checkbox, Form, Input } from 'antd';
 
 const onFinish = (values: any) => {
@@ -13,6 +14,10 @@ type FieldType = {
   password?: string;
   remember?: string;
 };
+
+export const Route = new FileRoute('/signup').createRoute({
+  component: SignupView,
+});
 
 function SignupView() {
   return (

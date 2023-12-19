@@ -1,16 +1,19 @@
-// package imports
+//#region package imports
 import 'dotenv/config';
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import morgan from 'morgan';
+//#endregion
 
-// route imports
+//#region route imports
 import TodosRoute from '../todos/todos-routes';
+import SupabaseAuthRoute from '../supabase-auth/supabase-auth-routes';
 import errorHandler from '../middleware/errorHandler';
+//#endregion
 
 const createExpressServer = () => {
-  // setup express app
+  //#region setup express app
   const app = express();
   const server = http.createServer(app);
   const port = process.env.PORT || 3000;
@@ -19,8 +22,9 @@ const createExpressServer = () => {
     process.env.APP_URL = 'http://localhost:5173';
     process.env.API_URL = 'http://localhost:1200';
   }
+  //#endregion
 
-  // middleware
+  //#region middleware
   app.use(errorHandler);
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -33,10 +37,13 @@ const createExpressServer = () => {
       ],
     })
   );
+  //#endregion
 
-  // routes
+  //#region routes
   app.get('/health', (_, res) => res.status(200).send('Health Check'));
   app.use('/todos', TodosRoute);
+  app.use('/auth', SupabaseAuthRoute);
+  //#endregion
 
   // start server
   return server.listen(port, () => console.log(`Example app listening on port http://localhost:${port}`));

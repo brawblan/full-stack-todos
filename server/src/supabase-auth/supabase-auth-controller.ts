@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { supabase } from '../services/supabase';
 
+const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.PROD_APP_URL : process.env.APP_URL;
+
 interface SupabaseAuthRequest extends Request {
   body: {
     email: string;
@@ -25,7 +27,40 @@ export const signInWithPassword = async (req: SupabaseAuthRequest, res: Response
     return res.status(400).send({ error });
   }
 
-  return res.status(200).send({ data });
+  return res.status(200).send({ data, success: true });
+};
+
+export const signInWithGoogle = async (_: Request, res: Response) => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      },
+    },
+  });
+
+  if (error) {
+    return res.status(400).send({ error });
+  }
+
+  return res.status(200).send({ success: true, data });
+};
+
+export const handleAuthData = async (req: Request, res: Response) => {
+  const { access_token, refresh_token } = JSON.parse(req.body.body);
+
+  const session = await supabase.auth.setSession({
+    access_token,
+    refresh_token,
+  });
+
+  if (session.error) {
+    return res.status(400).send({ error: session.error });
+  }
+
+  return res.status(200).send({ success: true, url: '/protected/todos' });
 };
 
 export const createAccount = async (req: SupabaseAuthRequest, res: Response) => {

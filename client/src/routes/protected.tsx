@@ -1,11 +1,12 @@
 import { FileRoute, redirect } from '@tanstack/react-router';
 
-export const Route = new FileRoute('/').createRoute({
+export const Route = new FileRoute('/protected').createRoute({
   beforeLoad: async ({ context }) => {
-    if (context.auth.getState().status === 'loggedOut') {
+    const isAuthRoute = location.pathname === '/login' || location.pathname === '/create-account';
+    if (!context.auth.getState().isAuthenticated && !isAuthRoute) {
       throw redirect({
         replace: true,
-        to: '/signin',
+        to: '/login',
       });
     }
 

@@ -1,19 +1,19 @@
 import { create } from 'zustand';
 
 export type Auth = {
-  status: 'loggedOut' | 'loggedIn';
+  isAuthenticated: boolean;
   username?: string;
-  login: (username: string) => void;
+  login: () => void;
   logout: () => void;
 };
 
 export const useAuthStore = create<Auth>((set) => ({
-  status: 'loggedOut',
+  isAuthenticated: false,
   username: undefined,
-  login: (username: string) => {
-    set({ status: 'loggedIn', username });
+  login: () => {
+    set({ isAuthenticated: true });
   },
   logout: () => {
-    set({ status: 'loggedOut', username: undefined });
+    set({ isAuthenticated: false, username: undefined });
   },
 }));

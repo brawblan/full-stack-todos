@@ -1,7 +1,7 @@
 import { Collapse, Divider, List } from 'antd';
 import { FileRoute } from '@tanstack/react-router';
 
-export const Route = new FileRoute('/app-info').createRoute({
+export const Route = new FileRoute('/protected/app-info').createRoute({
   component: AppInfoView,
 });
 

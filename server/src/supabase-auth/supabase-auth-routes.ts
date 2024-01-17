@@ -5,13 +5,17 @@ import {
   getLoggedInUser,
   forgotPasswordEmail,
   signOut,
-  updateUser
+  updateUser,
+  signInWithGoogle,
+  handleAuthData
 } from './supabase-auth-controller';
 
 const SupabaseAuthRoute = express.Router();
 
-SupabaseAuthRoute.post('/', signInWithPassword);
-SupabaseAuthRoute.post('/create', createAccount);
+SupabaseAuthRoute.post('/login', signInWithPassword);
+SupabaseAuthRoute.post('/googleLogin', signInWithGoogle);
+SupabaseAuthRoute.post('/authData', handleAuthData);
+SupabaseAuthRoute.post('/createAccount', createAccount);
 SupabaseAuthRoute.get('/currentUser', getLoggedInUser);
 SupabaseAuthRoute.post('/forgotPassword', forgotPasswordEmail);
 SupabaseAuthRoute.post('/updateUser', updateUser);

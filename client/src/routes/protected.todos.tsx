@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { todosQueryOptions } from '../queries/todos';
 import { FileRoute } from '@tanstack/react-router';
 
-export const Route = new FileRoute('/todos').createRoute({
+export const Route = new FileRoute('/protected/todos').createRoute({
   component: TodosView,
   loader: async ({ context: { queryClient } }) => (
     await queryClient.ensureQueryData(todosQueryOptions)

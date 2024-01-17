@@ -1,7 +1,7 @@
 import { FileRoute, Link } from '@tanstack/react-router';
 import { useAuthStore } from '../store/auth';
 
-export const Route = new FileRoute('/profile').createRoute({
+export const Route = new FileRoute('/protected/profile').createRoute({
   component: ProfileView,
 });
 
@@ -15,7 +15,7 @@ function ProfileView() {
   return (
     <>
       <div>ProfileView</div>
-      <Link onClick={handleLogout} to="/todos">
+      <Link onClick={handleLogout} to="/protected/todos">
         <button type="button">
           Logout
         </button>

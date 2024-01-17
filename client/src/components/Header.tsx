@@ -6,7 +6,7 @@ import { useAuthStore } from '../store/auth';
 const MenuItems = [
   {
     label: (
-      <Link to="/todos">
+      <Link to="/protected/todos">
         Todos
       </Link>
     ),
@@ -15,7 +15,7 @@ const MenuItems = [
   },
   {
     label: (
-      <Link to="/app-info">
+      <Link to="/protected/app-info">
         App Info
       </Link>
     ),
@@ -23,7 +23,7 @@ const MenuItems = [
   },
   {
     label: (
-      <Link to="/profile">
+      <Link to="/protected/profile">
         Profile
       </Link>
     ),
@@ -37,7 +37,7 @@ export default function TodoHeader() {
   return (
     <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', width: '100%' }}>
       <h1 style={{ color: 'white', textWrap: 'nowrap' }}>Full Stack Todo App</h1>
-      {auth.status === 'loggedIn' && (
+      {auth.isAuthenticated && (
         <Menu
           theme="dark"
           mode="horizontal"

@@ -6,9 +6,10 @@ import { FileRoute } from '@tanstack/react-router';
 
 export const Route = new FileRoute('/protected/todos').createRoute({
   component: TodosView,
-  loader: async ({ context: { queryClient } }) => (
-    await queryClient.ensureQueryData(todosQueryOptions)
-  ),
+  loader: async ({ context: { queryClient, auth } }) => {
+    console.log(auth.getState().isAuthenticated);
+    return await queryClient.ensureQueryData(todosQueryOptions);
+  },
 });
 
 function TodosView() {

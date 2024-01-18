@@ -7,6 +7,11 @@ import { useMutation } from '@tanstack/react-query';
 import { POST } from '../utilities/fetch';
 import { toast } from 'react-toastify';
 import { GoogleLoginButton } from '../components/GoogleLoginButton';
+import { setServerSession } from '../utilities/auth-data';
+import { router } from '../main';
+import { SuccessResponse, ErrorResponse } from '../types/Response';
+import { AuthData } from '../types/Auth';
+import { useAuthStore } from '../store/auth';
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo);
@@ -17,12 +22,15 @@ type FieldType = {
   password?: string;
 };
 
+type CreateAccountSuccessResponse = SuccessResponse<{ session: AuthData; }>;
+
 export const Route = new FileRoute('/create-account').createRoute({
   component: CreateAccountView,
 });
 
 function CreateAccountView() {
   const [form] = Form.useForm<{ email: string; password: string; }>();
+  const [login] = useAuthStore((state) => [state.login]);
   const { emailIsValid, emailErrorMessage, validateEmail } = useEmailValidation();
   const { passwordIsValid, passwordErrorMessage, validatePassword } = usePasswordValidation();
 
@@ -31,7 +39,15 @@ function CreateAccountView() {
       email: form.getFieldValue('email'),
       password: form.getFieldValue('password')
     }),
-    onSuccess: () => {
+    onSuccess: (response: CreateAccountSuccessResponse | ErrorResponse) => {
+      setServerSession((response as CreateAccountSuccessResponse).data.session);
+
+      login();
+
+      router.navigate({
+        to: '/protected/todos',
+      });
+
       toast("Successfully create an account! Check email for verification email.", {
         type: 'success',
         theme: 'dark',
@@ -51,7 +67,7 @@ function CreateAccountView() {
         <Form
           form={form}
           name="basic"
-          labelCol={{ span: 8 }}
+          labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           style={{ maxWidth: 600 }}
           initialValues={{ remember: true }}
@@ -102,11 +118,13 @@ function CreateAccountView() {
             </Form.Item>
           </Tooltip>
 
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
             <SubmitButton form={form} />
           </Form.Item>
+          <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
+            <GoogleLoginButton authType="createAccount" />
+          </Form.Item>
         </Form>
-        <GoogleLoginButton authType="createAccount" />
       </Card>
       <div>
         Already have an account? <Link to="/login">Login</Link>

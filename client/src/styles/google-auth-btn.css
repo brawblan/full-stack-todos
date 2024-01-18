@@ -14,7 +14,8 @@
   cursor: pointer;
   font-family: 'Roboto', arial, sans-serif;
   font-size: 14px;
-  height: 40px;
+  height: 100%;
+  min-height: 40px;
   letter-spacing: 0.25px;
   outline: none;
   overflow: hidden;
@@ -28,6 +29,13 @@
   width: auto;
   max-width: 400px;
   min-width: min-content;
+  text-wrap: wrap;
+}
+
+@media (max-width: 375px) {
+  .gsi-material-button {
+    max-width: 170px;
+  }
 }
 
 .gsi-material-button .gsi-material-button-icon {

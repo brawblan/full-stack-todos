@@ -53,7 +53,7 @@ function LoginView() {
         <Form
           form={form}
           name="basic"
-          labelCol={{ span: 8 }}
+          labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           style={{ maxWidth: 600 }}
           onFinish={() => loginMutation.mutate()}
@@ -76,13 +76,15 @@ function LoginView() {
             <Input.Password />
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
             <Button type="primary" htmlType="submit">
               Login
             </Button>
           </Form.Item>
+          <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
+            <GoogleLoginButton authType="login" />
+          </Form.Item>
         </Form>
-        <GoogleLoginButton authType="login" />
       </Card>
       <div>
         Need an account? <Link to="/create-account">Create an account</Link>

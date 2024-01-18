@@ -1,27 +1,21 @@
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { POST } from '../utilities/fetch';
+import { SuccessResponse, ErrorResponse } from '../types/Response';
 
 enum AuthTypeButtonText {
   login = 'Login',
   createAccount = 'Create Account',
 }
 
-interface SuccessResponse<T> {
-  data: T;
-  success: boolean;
-}
-
-interface ErrorResponse {
-  message: string;
-}
+type GoogleLoginSuccessResponse = SuccessResponse<{ url: string; }>;
 
 export const GoogleLoginButton = ({ authType }: { authType: 'login' | 'createAccount'; }) => {
   const ButtonText = `${AuthTypeButtonText[authType]} with Google`;
   const googleLoginMutation = useMutation({
     mutationFn: async () => await POST('/auth/googleLogin'),
-    onSuccess: (response: SuccessResponse<{ url: string; }> | ErrorResponse) => {
-      window.location.href = (response as SuccessResponse<any>).data.url;
+    onSuccess: (response: GoogleLoginSuccessResponse | ErrorResponse) => {
+      window.location.href = (response as GoogleLoginSuccessResponse).data.url;
     },
     onError: (error) => {
       toast(error.message, {

@@ -6,6 +6,7 @@ export const Route = new FileRoute('/').createRoute({
   component: IndexRoute,
   loader: async ({ location, navigate, context: { auth } }) => {
     const res = await setServerSession(location.href);
+    console.log(auth.getState().isAuthenticated);
 
     if (res?.success) {
       auth.setState({ isAuthenticated: true });

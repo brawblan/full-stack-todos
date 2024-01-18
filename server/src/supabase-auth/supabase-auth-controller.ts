@@ -76,10 +76,10 @@ export const createAccount = async (req: SupabaseAuthRequest, res: Response) => 
   });
 
   if (error) {
-    return res.status(400).send({ error });
+    return res.status(400).send({ success: false, error });
   }
 
-  return res.status(200).send({ data });
+  return res.status(200).send({ success: true, data });
 };
 
 export const getLoggedInUser = async (_: Request, res: Response) => {

@@ -1,6 +1,6 @@
 import { AuthData } from '../types/Auth';
 import { POST } from './fetch';
-
+import { useAuthStore } from '../store/auth';
 
 export const setServerSession = async (urlOrObject: string | Partial<AuthData>) => {
   let body: AuthData;
@@ -13,18 +13,22 @@ export const setServerSession = async (urlOrObject: string | Partial<AuthData>) 
 
   if (body.access_token) {
     sessionStorage.setItem('fullstack_todos', body.access_token);
+    useAuthStore.getState().authBtn = 'Logout';
+
     return await POST('/auth/authData', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${body.access_token}`
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
   }
 };
 
 const getDataFromURL = (url: string): AuthData => {
-  const authDataURLSearchParams = new URLSearchParams(`?${url.slice(2)}`);
+  const newURL = new URL(url);
+  const authDataString = newURL.hash ? newURL.hash.slice(1) : newURL.search.slice(1);
+  const authDataURLSearchParams = new URLSearchParams(authDataString);
 
   const access_token = authDataURLSearchParams.get('access_token') ?? '';
   const provider_refresh_token = authDataURLSearchParams.get('provider_refresh_token') ?? '';

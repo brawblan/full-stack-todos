@@ -1,24 +1,23 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
+import { useAntToast } from '../hooks/ant-toast';
 import { POST } from '../utilities/fetch';
 
 const CreateTodo: React.FC = () => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
+  const { showNotification } = useAntToast();
 
   const todoMutation = useMutation({
     mutationFn: (value: { title: string; }) => POST('/todos', value),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] });
       form.resetFields();
-      toast("Successfully created Todo!", {
-        type: 'success',
-        theme: 'dark',
-      });
+      showNotification('success', 'Successfully created Todo!');
     },
     onError: (error) => {
+      showNotification('error', 'Error', error.message);
       console.log('error', error);
     },
   });
@@ -27,8 +26,7 @@ const CreateTodo: React.FC = () => {
     <>
       <h2>Create a new todo</h2>
       <Form
-        layout={'horizontal'}
-        style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}
+        layout={'vertical'}
         form={form}
         onFinish={todoMutation.mutate}
       >

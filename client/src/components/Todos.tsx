@@ -15,7 +15,7 @@ const Todos = ({ todosQuery }: { todosQuery: UseQueryResult<any, Error>; }) => {
       pagination={{
         pageSize: 5,
       }}
-      // @ts-ignore
+      // @ts-expect-error
       renderItem={({ id, title, completed }) => (
         <List.Item key={`${id}-${title}`}>
           <Todo id={id} title={title} completed={completed} />

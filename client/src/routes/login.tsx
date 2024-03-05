@@ -1,23 +1,27 @@
 import { Button, Card, Form, Input, Space } from 'antd';
-import { useAuthStore } from '../store/auth';
 import { FileRoute, Link, useRouter } from '@tanstack/react-router';
 import { useMutation } from '@tanstack/react-query';
 import { POST } from '../utilities/fetch';
-import { toast } from 'react-toastify';
 import { GoogleLoginButton } from '../components/GoogleLoginButton';
+import { useAntToast } from '../hooks/ant-toast';
+import { setServerSession } from '../utilities/auth-data';
+import { ErrorResponse, SuccessResponse } from '../types/Response';
+import { AuthData } from '../types/Auth';
 
 type FieldType = {
   email?: string;
   password?: string;
 };
 
+type EmailLoginSuccessResponse = SuccessResponse<{ session: Partial<AuthData>; }>;
+
 export const Route = new FileRoute('/login').createRoute({
   component: LoginView,
 });
 
 function LoginView() {
+  const { showNotification } = useAntToast();
   const [form] = Form.useForm<{ email: string; password: string; }>();
-  const [login] = useAuthStore((state) => [state.login]);
   const router = useRouter();
 
   const onFinishFailed = (errorInfo: any) => {
@@ -29,21 +33,16 @@ function LoginView() {
       email: form.getFieldValue('email'),
       password: form.getFieldValue('password')
     }),
-    onSuccess: () => {
-      console.log('success');
-
-      login();
+    onSuccess: async (response: EmailLoginSuccessResponse | ErrorResponse) => {
+      await setServerSession((response as EmailLoginSuccessResponse).data.session);
       router.navigate({
-        to: '/protected/todos',
+        replace: true,
+        to: '/todos',
       });
     },
     onError: (error) => {
+      showNotification('error', 'Error', error.message);
       console.log('error', error);
-
-      toast(error.message, {
-        type: 'error',
-        theme: 'dark',
-      });
     }
   });
 
@@ -91,6 +90,6 @@ function LoginView() {
       </div>
     </Space>
   );
-};
+}
 
 export default LoginView;

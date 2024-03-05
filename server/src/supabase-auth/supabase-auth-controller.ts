@@ -48,6 +48,13 @@ export const signInWithGoogle = async (_: Request, res: Response) => {
   return res.status(200).send({ success: true, data });
 };
 
+/**
+ * 
+ * @param req 
+ * @param res 
+ * @returns 
+ * @description This function is used to handle the data returned from the OAuth provider.
+ */
 export const handleAuthData = async (req: Request, res: Response) => {
   const { access_token, refresh_token } = JSON.parse(req.body.body);
 
@@ -60,7 +67,7 @@ export const handleAuthData = async (req: Request, res: Response) => {
     return res.status(400).send({ error: session.error });
   }
 
-  return res.status(200).send({ success: true, url: '/protected/todos' });
+  return res.status(200).send({ success: true, url: '/todos' });
 };
 
 export const createAccount = async (req: SupabaseAuthRequest, res: Response) => {
@@ -85,7 +92,7 @@ export const createAccount = async (req: SupabaseAuthRequest, res: Response) => 
 export const getLoggedInUser = async (_: Request, res: Response) => {
   const { data: { user } } = await supabase.auth.getUser();
 
-  return res.status(200).send({ user });
+  return res.status(200).send({ data: { user } });
 };
 
 export const forgotPasswordEmail = async (req: SupabaseAuthRequest, res: Response) => {

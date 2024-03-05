@@ -5,13 +5,12 @@ import { useEmailValidation } from '../hooks/email-validation';
 import { SubmitButton } from '../components/SubmitButton';
 import { useMutation } from '@tanstack/react-query';
 import { POST } from '../utilities/fetch';
-import { toast } from 'react-toastify';
 import { GoogleLoginButton } from '../components/GoogleLoginButton';
 import { setServerSession } from '../utilities/auth-data';
 import { router } from '../main';
 import { SuccessResponse, ErrorResponse } from '../types/Response';
 import { AuthData } from '../types/Auth';
-import { useAuthStore } from '../store/auth';
+import { useAntToast } from '../hooks/ant-toast';
 
 const onFinishFailed = (errorInfo: any) => {
   console.log('Failed:', errorInfo);
@@ -29,8 +28,8 @@ export const Route = new FileRoute('/create-account').createRoute({
 });
 
 function CreateAccountView() {
+  const { showNotification } = useAntToast();
   const [form] = Form.useForm<{ email: string; password: string; }>();
-  const [login] = useAuthStore((state) => [state.login]);
   const { emailIsValid, emailErrorMessage, validateEmail } = useEmailValidation();
   const { passwordIsValid, passwordErrorMessage, validatePassword } = usePasswordValidation();
 
@@ -39,25 +38,16 @@ function CreateAccountView() {
       email: form.getFieldValue('email'),
       password: form.getFieldValue('password')
     }),
-    onSuccess: (response: CreateAccountSuccessResponse | ErrorResponse) => {
-      setServerSession((response as CreateAccountSuccessResponse).data.session);
-
-      login();
-
+    onSuccess: async (response: CreateAccountSuccessResponse | ErrorResponse) => {
+      await setServerSession((response as CreateAccountSuccessResponse).data.session);
       router.navigate({
-        to: '/protected/todos',
+        to: '/todos',
       });
 
-      toast("Successfully create an account! Check email for verification email.", {
-        type: 'success',
-        theme: 'dark',
-      });
+      showNotification('success', 'Successfully created account!');
     },
     onError: (error) => {
-      toast(error.message, {
-        type: 'error',
-        theme: 'dark',
-      });
+      showNotification('error', 'Error', error.message);
     }
   });
 

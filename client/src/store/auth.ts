@@ -1,30 +1,34 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { POST } from '../utilities/fetch';
+import { LogoutResponse } from '../types/Response';
 
 export type Auth = {
-  isAuthenticated: boolean;
   username?: string;
-  login: () => void;
-  logout: () => void;
+  authBtn: string;
+  logout: () => Promise<LogoutResponse>;
 };
 
-export const useAuthStore = create<Auth, [["zustand/persist", Auth]]>(
-  persist(
-    (set) => ({
-      isAuthenticated: false,
-      username: undefined,
-      login: () => {
-        set({ isAuthenticated: true });
-      },
-      logout: () => {
-        set({ isAuthenticated: false, username: undefined });
+export const useAuthStore = create<Auth>(
+  (set) => ({
+    username: undefined,
+    authBtn: 'Login',
+    logout: async (): Promise<LogoutResponse> => {
+      const willLogout = await POST('/auth/signOut');
+
+      if (willLogout.success) {
+        set({ username: undefined });
         sessionStorage.removeItem('fullstack_todos');
-        useAuthStore.persist.clearStorage();
-      },
-    }),
-    {
-      name: 'fullstack_todos_auth',
-      storage: createJSONStorage(() => sessionStorage),
+        return {
+          ok: true,
+        };
+      } else {
+        return {
+          ok: false,
+          error: {
+            message: 'There was an error logging out',
+          }
+        };
+      }
     },
-  ),
+  }),
 );

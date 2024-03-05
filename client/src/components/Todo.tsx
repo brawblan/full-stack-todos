@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Button, Switch, Modal } from 'antd';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { DeleteOutlined } from '@ant-design/icons';
 import { DELETE, PUT } from '../utilities/fetch';
+import { useAntToast } from '../hooks/ant-toast';
 
 interface Todo {
   id: number | string;
@@ -13,6 +12,7 @@ interface Todo {
 }
 
 const Todo = ({ id, title, completed }: Todo) => {
+  const { showNotification } = useAntToast();
   const queryClient = useQueryClient();
   const [checked, setChecked] = useState(completed);
   // #region Modal
@@ -32,13 +32,10 @@ const Todo = ({ id, title, completed }: Todo) => {
   const todoUpdateMutation = useMutation({
     mutationFn: async (todo: Todo) => await PUT('/todos', todo),
     onSuccess: () => {
-      toast("Successfully updated Todo!", {
-        type: 'success',
-        theme: 'dark',
-      });
+      showNotification('success', 'Successfully updated Todo!');
     },
     onError: (error: Error) => {
-      toast("There was an error updating the Todo.");
+      showNotification('error', 'Error', error.message);
       console.log('error', error);
     },
   });
@@ -46,14 +43,11 @@ const Todo = ({ id, title, completed }: Todo) => {
   const todoDeleteMutation = useMutation({
     mutationFn: async (id: string | number) => await DELETE(`/todos/${id}`),
     onSuccess: () => {
-      toast("Successfully deleted Todo!", {
-        type: 'success',
-        theme: 'dark',
-      });
+      showNotification('success', 'Successfully deleted Todo!');
       queryClient.invalidateQueries({ queryKey: ['todos'] });
     },
     onError: (error: Error) => {
-      toast("There was an error deleting the Todo.");
+      showNotification('error', 'Error', error.message);
       console.log('error', error);
     },
   });

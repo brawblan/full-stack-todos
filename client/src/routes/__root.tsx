@@ -7,7 +7,7 @@ import '../index.css';
 import TodoHeader from '../components/Header';
 import TodoFooter from '../components/Footer';
 import { Layout, theme } from 'antd';
-import { ToastContainer } from 'react-toastify';
+import { useAntToast } from '../hooks/ant-toast';
 
 const { Content } = Layout;
 
@@ -19,22 +19,25 @@ export const Route = rootRouteWithContext<{
 });
 
 export default function AppRoot() {
+  const { contextHolder } = useAntToast();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
   return (
-    <Layout className="layout">
-      <ToastContainer />
-      <TodoHeader />
-      <Content style={{ padding: '2rem 2rem', backgroundColor: colorBgContainer }}>
-        <div className="site-layout-content">
-          <Outlet />
-        </div>
-      </Content>
-      <TodoFooter />
-      <ReactQueryDevtools buttonPosition="bottom-right" />
-    </Layout>
+    <>
+      {contextHolder}
+      <Layout className="layout">
+        <TodoHeader />
+        <Content style={{ padding: '2rem 2rem', backgroundColor: colorBgContainer }}>
+          <div className="site-layout-content">
+            <Outlet />
+          </div>
+        </Content>
+        <TodoFooter />
+        <ReactQueryDevtools buttonPosition="bottom-right" />
+      </Layout>
+    </>
   );
 }
 

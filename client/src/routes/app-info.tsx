@@ -1,7 +1,7 @@
 import { Collapse, Divider, List } from 'antd';
 import { FileRoute } from '@tanstack/react-router';
 
-export const Route = new FileRoute('/protected/app-info').createRoute({
+export const Route = new FileRoute('/app-info').createRoute({
   component: AppInfoView,
 });
 
@@ -12,7 +12,6 @@ const frontendData = [
   'Ant Design',
   'Tanstack Query',
   'Tanstack Router',
-  'React Toastify',
 ];
 
 const backendData = [
@@ -89,4 +88,4 @@ export default function AppInfoView() {
       />
     </>
   );
-};
+}
